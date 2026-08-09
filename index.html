@@ -351,11 +351,10 @@
         </div>
 
         <div class="form-row">
-          <label id="slotPickerLabel">Available Times *</label>
-          <div id="slotPicker" class="slot-picker" aria-live="polite" aria-labelledby="slotPickerLabel">
-            <p class="slot-picker-hint">Choose a date above to see available times.</p>
-          </div>
-          <input type="hidden" id="time" name="time">
+          <label for="time">Preferred Time *</label>
+          <select id="time" name="time" required disabled aria-live="polite">
+            <option value="" disabled selected>Choose a date first</option>
+          </select>
         </div>
 
         <div class="form-row">
