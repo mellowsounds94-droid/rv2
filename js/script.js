@@ -3,10 +3,10 @@
    ========================================================= */
 // Paste the Web App URL you get after deploying the Google Apps
 // Script (see google-apps-script/Code.gs + SETUP-GUIDE.md).
-const BOOKING_ENDPOINT = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+const BOOKING_ENDPOINT = "https://script.google.com/macros/s/AKfycbwQM1O71dI7eHFTEgLh0XL-CMViZKrlpgt_wQdGnlpgjbj44hP79YQaN2rneN6fipSt/exec";
 
 // Placeholder owner email — swap for the real school owner email.
-const OWNER_EMAIL = "owner@example.com";
+const OWNER_EMAIL = "rv2learners@gmail.com";
 
 /* ========================================================= */
 
