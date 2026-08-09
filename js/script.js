@@ -73,36 +73,33 @@ function setMinBookingDate() {
 
 /**
  * Wires up the date input so that choosing a date fetches that day's
- * availability from the Apps Script backend and renders it as clickable
- * time slots, instead of making customers guess a time and find out at
- * submit time whether it's taken.
+ * availability from the Apps Script backend and populates the time
+ * dropdown — booked times are shown but disabled, so customers can't
+ * accidentally pick one, instead of finding out only at submit time.
  */
 function setupSlotPicker() {
   const dateInput = document.getElementById("date");
-  const picker = document.getElementById("slotPicker");
-  const timeInput = document.getElementById("time");
-  if (!dateInput || !picker || !timeInput) return;
+  const timeSelect = document.getElementById("time");
+  if (!dateInput || !timeSelect) return;
 
   dateInput.addEventListener("change", () => loadSlots(dateInput.value));
 
-  // Exposed so the booking form handler can refresh the picker after a
+  // Exposed so the booking form handler can refresh the dropdown after a
   // successful booking or a last-second conflict (the slot just changed).
-  picker.reload = () => loadSlots(dateInput.value);
+  timeSelect.reload = () => loadSlots(dateInput.value);
 
   async function loadSlots(dateStr) {
-    timeInput.value = "";
-
     if (!dateStr) {
-      picker.innerHTML = '<p class="slot-picker-hint">Choose a date above to see available times.</p>';
+      setPlaceholder("Choose a date first");
       return;
     }
 
     if (BOOKING_ENDPOINT === "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE") {
-      picker.innerHTML = `<p class="slot-picker-hint">Online availability isn't connected yet — please call ${BUSINESS_PHONE} to book.</p>`;
+      setPlaceholder(`Call ${BUSINESS_PHONE} to book — online booking isn't connected yet`);
       return;
     }
 
-    picker.innerHTML = '<p class="slot-picker-hint">Loading available times…</p>';
+    setPlaceholder("Loading available times…");
 
     try {
       const response = await fetch(`${BOOKING_ENDPOINT}?date=${encodeURIComponent(dateStr)}`);
@@ -114,41 +111,48 @@ function setupSlotPicker() {
       renderSlots(result.slots || []);
     } catch (err) {
       console.error(err);
-      picker.innerHTML = `<p class="slot-picker-hint">Couldn't load availability. Please call ${BUSINESS_PHONE} to book, or try again.</p>`;
+      setPlaceholder(`Couldn't load availability — call ${BUSINESS_PHONE} or try again`);
     }
+  }
+
+  function setPlaceholder(text) {
+    timeSelect.innerHTML = "";
+    const opt = document.createElement("option");
+    opt.value = "";
+    opt.disabled = true;
+    opt.selected = true;
+    opt.textContent = text;
+    timeSelect.appendChild(opt);
+    timeSelect.disabled = true;
   }
 
   function renderSlots(slots) {
     if (slots.length === 0) {
-      picker.innerHTML = '<p class="slot-picker-hint">No lessons run on this day. Please choose another date.</p>';
+      setPlaceholder("No lessons run on this day — choose another date");
       return;
     }
 
     const anyAvailable = slots.some((slot) => slot.available);
-    if (!anyAvailable) {
-      picker.innerHTML = `<p class="slot-picker-empty">Fully booked on this day. Please choose another date, or <a href="tel:${BUSINESS_PHONE.replace(/\s/g, "")}">call us on ${BUSINESS_PHONE}</a> — Vijay may be able to fit you in.</p>`;
-      return;
-    }
 
-    picker.innerHTML = "";
+    timeSelect.innerHTML = "";
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    placeholder.textContent = anyAvailable
+      ? "Select a time"
+      : `Fully booked — call ${BUSINESS_PHONE}`;
+    timeSelect.appendChild(placeholder);
+
     slots.forEach((slot) => {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "slot-btn";
-      btn.textContent = slot.label;
-      btn.disabled = !slot.available;
-      btn.setAttribute("aria-pressed", "false");
-      btn.addEventListener("click", () => {
-        picker.querySelectorAll(".slot-btn").forEach((b) => {
-          b.classList.remove("selected");
-          b.setAttribute("aria-pressed", "false");
-        });
-        btn.classList.add("selected");
-        btn.setAttribute("aria-pressed", "true");
-        timeInput.value = slot.time;
-      });
-      picker.appendChild(btn);
+      const opt = document.createElement("option");
+      opt.value = slot.time;
+      opt.textContent = slot.available ? slot.label : `${slot.label} — booked`;
+      opt.disabled = !slot.available;
+      timeSelect.appendChild(opt);
     });
+
+    timeSelect.disabled = !anyAvailable;
   }
 }
 
@@ -233,8 +237,8 @@ function setupBookingForm() {
   });
 
   function refreshSlotPicker() {
-    const picker = document.getElementById("slotPicker");
-    if (picker && typeof picker.reload === "function") picker.reload();
+    const timeSelect = document.getElementById("time");
+    if (timeSelect && typeof timeSelect.reload === "function") timeSelect.reload();
   }
 
   function showStatus(message, type) {
