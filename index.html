@@ -1,413 +1,144 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Right Vehicle To Learners Driving School | Austral, NSW</title>
-<meta name="description" content="Right Vehicle To Learners Driving School in Austral NSW. 5.0★ rated, 112+ Google reviews. Learner lessons, test day support, overseas licence conversion. Book online.">
-<link rel="canonical" href="https://rv2learners.au/">
-<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
+/* =========================================================
+   CONFIG — update these two values when you deploy
+   ========================================================= */
+// Paste the Web App URL you get after deploying the Google Apps
+// Script (see google-apps-script/Code.gs + SETUP-GUIDE.md).
+const BOOKING_ENDPOINT = "https://script.google.com/macros/s/AKfycbwQM1O71dI7eHFTEgLh0XL-CMViZKrlpgt_wQdGnlpgjbj44hP79YQaN2rneN6fipSt/exec";
 
-<!-- Open Graph / social sharing -->
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Right Vehicle To Learners Driving School">
-<meta property="og:title" content="Right Vehicle To Learners Driving School | Austral, NSW">
-<meta property="og:description" content="5.0★ rated, 112+ Google reviews. Patient, professional driving lessons in Austral NSW. Book online.">
-<meta property="og:url" content="https://rv2learners.au/">
-<meta property="og:image" content="https://rv2learners.au/og-image.jpg">
-<meta name="twitter:card" content="summary_large_image">
+// Placeholder owner email — swap for the real school owner email.
+const OWNER_EMAIL = "rv2learners@gmail.com";
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
+/* ========================================================= */
 
-<!-- Local business structured data (helps Google Search / Maps understand the site) -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "DrivingSchool",
-  "name": "Right Vehicle To Learners Driving School",
-  "url": "https://rv2learners.au/",
-  "telephone": "+61420655620",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "77 Narrami Rd",
-    "addressLocality": "Austral",
-    "addressRegion": "NSW",
-    "postalCode": "2179",
-    "addressCountry": "AU"
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "5.0",
-    "reviewCount": "112"
-  },
-  "openingHoursSpecification": [
-    {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
-      "opens": "06:00",
-      "closes": "18:00"
-    },
-    {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": "Sunday",
-      "opens": "07:00",
-      "closes": "18:00"
-    }
-  ]
+document.addEventListener("DOMContentLoaded", () => {
+  setYear();
+  setupMobileNav();
+  setupTestimonialScroller();
+  setupBookingForm();
+  setMinBookingDate();
+});
+
+function setYear() {
+  const el = document.getElementById("year");
+  if (el) el.textContent = new Date().getFullYear();
 }
-</script>
-</head>
-<body>
 
-<header class="site-header" id="header">
-  <div class="container header-inner">
-    <a href="#home" class="logo">
-      <img src="img/logo.png" alt="RV2 Learners Driving School logo" class="logo-icon">
-      <span class="logo-text">Right Vehicle <span>To Learners</span></span>
-    </a>
-    <nav class="nav" id="nav">
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#services">Services</a>
-      <a href="#testimonials">Reviews</a>
-      <a href="#booking">Book a Lesson</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <a href="#booking" class="btn btn-primary nav-cta">Book Now</a>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</header>
+function setupMobileNav() {
+  const header = document.getElementById("header");
+  const toggle = document.getElementById("navToggle");
+  const nav = document.getElementById("nav");
+  if (!toggle || !nav || !header) return;
 
-<main>
+  toggle.addEventListener("click", () => {
+    header.classList.toggle("nav-open");
+  });
 
-  <!-- HERO -->
-  <section class="hero" id="home">
-    <div class="container hero-inner">
-      <div class="hero-content">
-        <p class="eyebrow">Austral, NSW &amp; Surrounding Suburbs</p>
-        <h1>Confident Drivers Start With The Right Vehicle</h1>
-        <p class="hero-sub">Patient, professional driving lessons in a dual-control vehicle. From your very first lesson to passing your test first go, we tailor every session to how you learn best.</p>
-        <div class="hero-rating">
-          <span class="stars" aria-hidden="true">★★★★★</span>
-          <span><strong>5.0</strong> from <strong>112</strong> Google reviews</span>
-        </div>
-        <div class="hero-actions">
-          <a href="#booking" class="btn btn-primary">Book Your Lesson</a>
-          <a href="tel:0420655620" class="btn btn-outline">📞 0420 655 620</a>
-        </div>
-      </div>
-      <div class="hero-card">
-        <div class="hero-card-row">
-          <span class="hero-card-icon">📍</span>
-          <div>
-            <strong>77 Narrami Rd</strong>
-            <p>Austral NSW 2179</p>
-          </div>
-        </div>
-        <div class="hero-card-row">
-          <span class="hero-card-icon">🕒</span>
-          <div>
-            <strong>Open Daily</strong>
-            <p>Mon–Sat 6:00 AM–6:00 PM · Sun 7:00 AM–6:00 PM</p>
-          </div>
-        </div>
-        <div class="hero-card-row">
-          <span class="hero-card-icon">🎓</span>
-          <div>
-            <strong>Fully Qualified Instructor</strong>
-            <p>Dual-control vehicle, all skill levels</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  nav.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => header.classList.remove("nav-open"));
+  });
+}
 
-  <!-- TRUST STRIP -->
-  <section class="trust-strip">
-    <div class="container trust-strip-inner">
-      <div class="trust-item"><strong>112+</strong><span>Google Reviews</span></div>
-      <div class="trust-item"><strong>5.0★</strong><span>Average Rating</span></div>
-      <div class="trust-item"><strong>1st-Attempt</strong><span>Test Passes</span></div>
-      <div class="trust-item"><strong>Dual-Control</strong><span>Safe Vehicle</span></div>
-    </div>
-  </section>
+function setupTestimonialScroller() {
+  const track = document.getElementById("testimonialTrack");
+  const prev = document.getElementById("testimonialPrev");
+  const next = document.getElementById("testimonialNext");
+  if (!track || !prev || !next) return;
 
-  <!-- ABOUT -->
-  <section class="about" id="about">
-    <div class="container about-inner">
-      <div class="about-media" aria-hidden="true">
-        <div class="about-media-block photo">
-          <img src="img/school-car.jpg" alt="Right Vehicle To Learners dual-control training car" class="about-media-photo">
-        </div>
-      </div>
-      <div class="about-content">
-        <p class="section-eyebrow">About Us</p>
-        <h2>Learning to drive, done right.</h2>
-        <p>Right Vehicle To Learners Driving School has helped hundreds of learners across Austral and the surrounding suburbs become safe, confident drivers. Our instructor is known for a calm, patient teaching style that meets you exactly where you are — whether that's your very first time behind the wheel or a final polish before your test.</p>
-        <p>We focus on the fundamentals that actually matter for the test and for real life: lane changes, head checks, parking, and staying calm under pressure. Many of our students pass on their first attempt.</p>
-        <ul class="about-list">
-          <li>Patient, structured lessons tailored to your level</li>
-          <li>Dual-control vehicle for a safe learning environment</li>
-          <li>Support converting overseas licences to NSW licences</li>
-          <li>Flexible scheduling, 7 days a week</li>
-        </ul>
-      </div>
-    </div>
-  </section>
+  const scrollAmount = () => track.clientWidth * 0.8;
 
-  <!-- SERVICES -->
-  <section class="services" id="services">
-    <div class="container">
-      <p class="section-eyebrow center">What We Offer</p>
-      <h2 class="center">Lessons Built Around You</h2>
-      <div class="services-grid">
-        <div class="service-card">
-          <div class="service-icon">🧭</div>
-          <h3>Beginner Lessons</h3>
-          <p>Never driven before? Start from the basics — controls, road rules, and building confidence at your own pace.</p>
-        </div>
-        <div class="service-card">
-          <div class="service-icon">🛣️</div>
-          <h3>Standard Driving Lessons</h3>
-          <p>Structured lessons covering lane changes, head checks, parking, roundabouts, and defensive driving.</p>
-        </div>
-        <div class="service-card">
-          <div class="service-icon">✅</div>
-          <h3>Test Day Support</h3>
-          <p>Final preparation and, where available, use of our dual-control vehicle on the day of your driving test.</p>
-        </div>
-        <div class="service-card">
-          <div class="service-icon">🌏</div>
-          <h3>Overseas Licence Conversion</h3>
-          <p>Guidance and practice sessions to help you convert your overseas licence to a valid NSW driving licence.</p>
-        </div>
-        <div class="service-card">
-          <div class="service-icon">💪</div>
-          <h3>Confidence Building</h3>
-          <p>Nervous or anxious behind the wheel? Calm, encouraging coaching designed to build real confidence.</p>
-        </div>
-        <div class="service-card">
-          <div class="service-icon">🔄</div>
-          <h3>Refresher Lessons</h3>
-          <p>Been off the road a while? Get back up to speed with a tailored refresher package.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  prev.addEventListener("click", () => {
+    track.scrollBy({ left: -scrollAmount(), behavior: "smooth" });
+  });
+  next.addEventListener("click", () => {
+    track.scrollBy({ left: scrollAmount(), behavior: "smooth" });
+  });
+}
 
-  <!-- TESTIMONIALS -->
-  <section class="testimonials" id="testimonials">
-    <div class="container">
-      <p class="section-eyebrow center">Testimonials</p>
-      <h2 class="center">What Our Learners Say</h2>
-      <p class="section-sub center">Real reviews from Google, from real students.</p>
+function setMinBookingDate() {
+  const dateInput = document.getElementById("date");
+  if (!dateInput) return;
+  const today = new Date().toISOString().split("T")[0];
+  dateInput.setAttribute("min", today);
+}
 
-      <div class="testimonial-track" id="testimonialTrack">
+function setupBookingForm() {
+  const form = document.getElementById("bookingForm");
+  const status = document.getElementById("formStatus");
+  const submitBtn = document.getElementById("bookingSubmit");
+  if (!form || !status) return;
 
-        <div class="testimonial-card">
-          <span class="stars">★★★★★</span>
-          <p>"Highly recommend Right Vehicle Driving School! Vijay Brother is a very patient, friendly, and professional instructor. His teaching style made learning easy and boosted my confidence on the road. Great experience overall."</p>
-          <div class="testimonial-author">
-            <strong>Suraj Bhattarai</strong>
-            <span>Google Review · 2 months ago</span>
-          </div>
-        </div>
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-        <div class="testimonial-card">
-          <span class="stars">★★★★★</span>
-          <p>"Passed my driving test on the first attempt after just 10 lessons. The training is very well structured, and Vijay dai explains everything in a simple way while focusing on mistakes."</p>
-          <div class="testimonial-author">
-            <strong>Sanjaya Bardewa</strong>
-            <span>Google Review · 3 months ago</span>
-          </div>
-        </div>
+    const data = {
+      fullName: form.fullName.value.trim(),
+      email: form.email.value.trim(),
+      phone: form.phone.value.trim(),
+      lessonType: form.lessonType.value,
+      date: form.date.value,
+      time: form.time.value,
+      message: form.message.value.trim(),
+    };
 
-        <div class="testimonial-card">
-          <span class="stars">★★★★★</span>
-          <p>"I passed my driving test on the first try, and I couldn't have done it without Vijay Dai's excellent guidance and support. He is very knowledgeable, patient, friendly, and approachable."</p>
-          <div class="testimonial-author">
-            <strong>Ebita Tamrakar</strong>
-            <span>Google Review · 1 month ago</span>
-          </div>
-        </div>
+    if (!data.fullName || !data.email || !data.phone || !data.lessonType || !data.date || !data.time) {
+      showStatus("Please fill in all required fields.", "error");
+      return;
+    }
 
-        <div class="testimonial-card">
-          <span class="stars">★★★★★</span>
-          <p>"I would like to sincerely thank my driving instructor, Bijaya Dai, for his excellent guidance and support in helping me convert my Nepalese driving licence to an Australian driving licence. He is very patient and friendly."</p>
-          <div class="testimonial-author">
-            <strong>Suboth Poudel</strong>
-            <span>Google Review · 7 months ago</span>
-          </div>
-        </div>
+    if (BOOKING_ENDPOINT === "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE") {
+      showStatus(
+        "Booking system isn't connected yet. Once the Google Apps Script Web App URL is added in js/script.js, this form will book directly into the calendar. For now, please call 0420 655 620.",
+        "error"
+      );
+      return;
+    }
 
-        <div class="testimonial-card">
-          <span class="stars">★★★★★</span>
-          <p>"Mr. Vijay teaches according to your driving level, whether it is for real-life driving or for the driving test. He is very patient and explains everything properly."</p>
-          <div class="testimonial-author">
-            <strong>Samir Dulal</strong>
-            <span>Google Review · 1 month ago</span>
-          </div>
-        </div>
+    submitBtn.disabled = true;
+    showStatus("Sending your booking request…", "loading");
 
-        <div class="testimonial-card">
-          <span class="stars">★★★★★</span>
-          <p>"Huge thanks to Bijay for helping me pass my driving test on my first attempt! He is an excellent instructor — very professional, patient, and easy to communicate with."</p>
-          <div class="testimonial-author">
-            <strong>Dipendra Kumar</strong>
-            <span>Google Review · 1 month ago</span>
-          </div>
-        </div>
+    try {
+      // Content-Type "text/plain" keeps this a CORS "simple request" (no
+      // preflight), and Apps Script web apps deployed with "Anyone" access
+      // return a readable response for simple requests — so we can read
+      // the JSON body back and tell success apart from a booking conflict.
+      const response = await fetch(BOOKING_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(data),
+      });
+      const result = await response.json();
 
-        <div class="testimonial-card">
-          <span class="stars">★★★★★</span>
-          <p>"I had a great experience learning with Right Vehicle to Learners. He was very supportive throughout my lessons. His guidance really helped me build confidence. Highly recommend!"</p>
-          <div class="testimonial-author">
-            <strong>Jastina Naharki</strong>
-            <span>Google Review · 3 months ago</span>
-          </div>
-        </div>
+      if (result.status === "success") {
+        showStatus(
+          `Thanks ${data.fullName.split(" ")[0]}! Your booking is confirmed. You'll get an email confirmation at ${data.email} shortly.`,
+          "success"
+        );
+        form.reset();
+        setMinBookingDate();
+      } else if (result.status === "conflict") {
+        showStatus(
+          result.message || "That time is already booked. Please choose a different time.",
+          "error"
+        );
+      } else {
+        showStatus(
+          result.message || "Something went wrong sending your request. Please call 0420 655 620 or try again.",
+          "error"
+        );
+      }
+    } catch (err) {
+      console.error(err);
+      showStatus(
+        "Couldn't confirm your booking — this can happen if the browser blocks reading the response. Please call 0420 655 620 to confirm, or try again.",
+        "error"
+      );
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
 
-        <div class="testimonial-card">
-          <span class="stars">★★★★★</span>
-          <p>"All kudos to Vijay brother. His teaching style made me feel confident and comfortable behind the wheel. Very calm and patient towards the learners."</p>
-          <div class="testimonial-author">
-            <strong>Royal Hamal</strong>
-            <span>Google Review · 4 months ago</span>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="testimonial-controls">
-        <button id="testimonialPrev" aria-label="Previous testimonials">←</button>
-        <button id="testimonialNext" aria-label="Next testimonials">→</button>
-      </div>
-
-      <div class="testimonials-cta">
-        <a href="https://www.google.com/maps/place/Right+Vehicle+To+Learners+Driving+School/@-33.9415074,150.8018641,827m/data=!3m2!1e3!4b1!4m6!3m5!1s0x6bb1e2deb7121221:0x4834f71866a96a78!8m2!3d-33.9415074!4d150.8018641!16s%2Fg%2F11kpfjrtgg" target="_blank" rel="noopener">See all 112 reviews on Google →</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- BOOKING -->
-  <section class="booking" id="booking">
-    <div class="container booking-inner">
-      <div class="booking-intro">
-        <p class="section-eyebrow">Book a Lesson</p>
-        <h2>Reserve Your Spot</h2>
-        <p>Fill out the form and we'll confirm your lesson. Once confirmed, it's automatically added to our calendar so your time slot is locked in — you'll get an email confirmation too.</p>
-        <ul class="booking-points">
-          <li>✅ Instant email confirmation</li>
-          <li>✅ Synced directly to our booking calendar</li>
-          <li>✅ Reschedule or cancel any time — just call us</li>
-        </ul>
-        <div class="booking-contact-alt">
-          <p>Prefer to book by phone?</p>
-          <a href="tel:0420655620" class="btn btn-outline">📞 0420 655 620</a>
-        </div>
-      </div>
-
-      <form class="booking-form" id="bookingForm">
-        <div id="formStatus" class="form-status" role="status" aria-live="polite"></div>
-
-        <div class="form-row">
-          <label for="fullName">Full Name *</label>
-          <input type="text" id="fullName" name="fullName" required>
-        </div>
-
-        <div class="form-row form-row-split">
-          <div>
-            <label for="email">Email *</label>
-            <input type="email" id="email" name="email" required>
-          </div>
-          <div>
-            <label for="phone">Phone *</label>
-            <input type="tel" id="phone" name="phone" required>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <label for="lessonType">Lesson Type *</label>
-          <select id="lessonType" name="lessonType" required>
-            <option value="" disabled selected>Select a lesson type</option>
-            <option value="Beginner Lesson">Beginner Lesson</option>
-            <option value="Standard Driving Lesson">Standard Driving Lesson</option>
-            <option value="Test Day Support">Test Day Support</option>
-            <option value="Overseas Licence Conversion">Overseas Licence Conversion</option>
-            <option value="Confidence Building">Confidence Building</option>
-            <option value="Refresher Lesson">Refresher Lesson</option>
-          </select>
-        </div>
-
-        <div class="form-row form-row-split">
-          <div>
-            <label for="date">Preferred Date *</label>
-            <input type="date" id="date" name="date" required>
-          </div>
-          <div>
-            <label for="time">Preferred Time *</label>
-            <input type="time" id="time" name="time" required>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <label for="message">Anything we should know? (optional)</label>
-          <textarea id="message" name="message" rows="3" placeholder="E.g. pickup location, prior driving experience, specific skills to work on..."></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-primary btn-block" id="bookingSubmit">Request Booking</button>
-        <p class="form-fineprint">Submitting this form sends your request to our calendar for confirmation. We'll email you to confirm the exact time.</p>
-      </form>
-    </div>
-  </section>
-
-  <!-- CONTACT / MAP -->
-  <section class="contact" id="contact">
-    <div class="container contact-inner">
-      <div class="contact-info">
-        <p class="section-eyebrow">Find Us</p>
-        <h2>Right Vehicle To Learners Driving School</h2>
-        <div class="contact-detail"><span>📍</span><p>77 Narrami Rd, Austral NSW 2179</p></div>
-        <div class="contact-detail"><span>📞</span><p><a href="tel:0420655620">0420 655 620</a></p></div>
-        <div class="contact-detail"><span>🕒</span><p>Mon–Sat: 6:00 AM – 6:00 PM<br>Sunday: 7:00 AM – 6:00 PM</p></div>
-        <div class="contact-detail"><span>★</span><p>5.0 rating from 112 Google reviews</p></div>
-        <a class="btn btn-outline" href="https://www.google.com/maps/place/Right+Vehicle+To+Learners+Driving+School/@-33.9415074,150.8018641,827m/data=!3m2!1e3!4b1!4m6!3m5!1s0x6bb1e2deb7121221:0x4834f71866a96a78!8m2!3d-33.9415074!4d150.8018641!16s%2Fg%2F11kpfjrtgg" target="_blank" rel="noopener">Get Directions →</a>
-      </div>
-      <div class="contact-map">
-        <iframe
-          title="Right Vehicle To Learners Driving School location"
-          src="https://www.google.com/maps?q=77+Narrami+Rd,+Austral+NSW+2179&output=embed"
-          width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<footer class="site-footer">
-  <div class="container footer-inner">
-    <div>
-      <span class="logo-text light">Right Vehicle <span>To Learners</span></span>
-      <p>Driving lessons in Austral, NSW. Patient instruction, real results.</p>
-    </div>
-    <nav class="footer-nav">
-      <a href="#about">About</a>
-      <a href="#services">Services</a>
-      <a href="#testimonials">Reviews</a>
-      <a href="#booking">Book a Lesson</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <p class="footer-copy">© <span id="year"></span> Right Vehicle To Learners Driving School. All rights reserved.</p>
-  </div>
-</footer>
-
-<script src="js/script.js"></script>
-</body>
-</html>
+  function showStatus(message, type) {
+    status.textContent = message;
+    status.className = `form-status ${type}`;
+  }
+}
