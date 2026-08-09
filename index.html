@@ -332,17 +332,26 @@
           </div>
         </div>
 
-        <div class="form-row">
-          <label for="lessonType">Lesson Type *</label>
-          <select id="lessonType" name="lessonType" required>
-            <option value="" disabled selected>Select a lesson type</option>
-            <option value="Beginner Lesson">Beginner Lesson</option>
-            <option value="Standard Driving Lesson">Standard Driving Lesson</option>
-            <option value="Test Day Support">Test Day Support</option>
-            <option value="Overseas Licence Conversion">Overseas Licence Conversion</option>
-            <option value="Confidence Building">Confidence Building</option>
-            <option value="Refresher Lesson">Refresher Lesson</option>
-          </select>
+        <div class="form-row form-row-split">
+          <div>
+            <label for="lessonType">Lesson Type *</label>
+            <select id="lessonType" name="lessonType" required>
+              <option value="" disabled selected>Select a lesson type</option>
+              <option value="Beginner Lesson">Beginner Lesson</option>
+              <option value="Standard Driving Lesson">Standard Driving Lesson</option>
+              <option value="Test Day Support">Test Day Support</option>
+              <option value="Overseas Licence Conversion">Overseas Licence Conversion</option>
+              <option value="Confidence Building">Confidence Building</option>
+              <option value="Refresher Lesson">Refresher Lesson</option>
+            </select>
+          </div>
+          <div>
+            <label for="duration">Duration *</label>
+            <select id="duration" name="duration" required>
+              <option value="60" selected>1 hour</option>
+              <option value="120">2 hours</option>
+            </select>
+          </div>
         </div>
 
         <div class="form-row">
@@ -355,6 +364,29 @@
           <select id="time" name="time" required disabled aria-live="polite">
             <option value="" disabled selected>Choose a date first</option>
           </select>
+        </div>
+
+        <div class="form-row form-row-checkbox">
+          <label class="checkbox-label">
+            <input type="checkbox" id="repeatBooking" name="repeatBooking">
+            Book the same time on consecutive days
+          </label>
+        </div>
+
+        <div class="form-row" id="repeatDaysRow" hidden>
+          <label for="repeatDays">Total days (including the first)</label>
+          <select id="repeatDays" name="repeatDays">
+            <option value="2">2 days</option>
+            <option value="3">3 days</option>
+            <option value="4">4 days</option>
+            <option value="5">5 days</option>
+            <option value="6">6 days</option>
+            <option value="7">7 days</option>
+            <option value="8">8 days</option>
+            <option value="9">9 days</option>
+            <option value="10">10 days</option>
+          </select>
+          <p class="repeat-hint">We check every day is free before confirming any of them — if one day's taken, you'll get a message instead of a partial booking.</p>
         </div>
 
         <div class="form-row">
