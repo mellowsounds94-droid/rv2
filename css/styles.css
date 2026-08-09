@@ -408,6 +408,46 @@ h2.center { text-align: center; }
   outline-offset: 1px;
   background: var(--white);
 }
+
+.slot-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 44px;
+  align-items: center;
+}
+.slot-btn {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--navy);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.slot-btn:hover:not(:disabled) { border-color: var(--blue); background: var(--blue-light); }
+.slot-btn.selected { background: var(--orange); border-color: var(--orange); color: var(--white); }
+.slot-btn:disabled {
+  background: #f1f1f4;
+  color: var(--gray-light);
+  border-color: var(--border);
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+.slot-picker-hint {
+  color: var(--gray);
+  font-size: 0.88rem;
+}
+.slot-picker-empty {
+  color: var(--gray);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+.slot-picker-empty a { color: var(--blue); font-weight: 600; }
+
 .form-fineprint { font-size: 0.78rem; color: var(--gray-light); text-align: center; }
 .form-status {
   display: none;
