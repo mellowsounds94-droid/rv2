@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupBookingForm();
   setMinBookingDate();
   setupSlotPicker();
+  setupRepeatToggle();
 });
 
 function setYear() {
@@ -80,9 +81,16 @@ function setMinBookingDate() {
 function setupSlotPicker() {
   const dateInput = document.getElementById("date");
   const timeSelect = document.getElementById("time");
+  const durationSelect = document.getElementById("duration");
   if (!dateInput || !timeSelect) return;
 
   dateInput.addEventListener("change", () => loadSlots(dateInput.value));
+
+  // Availability depends on lesson length too — a 2-hour lesson needs a
+  // bigger free window than a 1-hour one — so switching duration re-checks.
+  if (durationSelect) {
+    durationSelect.addEventListener("change", () => loadSlots(dateInput.value));
+  }
 
   // Exposed so the booking form handler can refresh the dropdown after a
   // successful booking or a last-second conflict (the slot just changed).
@@ -101,8 +109,12 @@ function setupSlotPicker() {
 
     setPlaceholder("Loading available times…");
 
+    const duration = durationSelect ? durationSelect.value : "60";
+
     try {
-      const response = await fetch(`${BOOKING_ENDPOINT}?date=${encodeURIComponent(dateStr)}`);
+      const response = await fetch(
+        `${BOOKING_ENDPOINT}?date=${encodeURIComponent(dateStr)}&duration=${encodeURIComponent(duration)}`
+      );
       const result = await response.json();
 
       if (result.status !== "success") {
@@ -156,6 +168,20 @@ function setupSlotPicker() {
   }
 }
 
+/**
+ * Shows/hides the "how many days" selector based on the repeat checkbox,
+ * so it stays out of the way unless someone actually wants a multi-day run.
+ */
+function setupRepeatToggle() {
+  const checkbox = document.getElementById("repeatBooking");
+  const row = document.getElementById("repeatDaysRow");
+  if (!checkbox || !row) return;
+
+  checkbox.addEventListener("change", () => {
+    row.hidden = !checkbox.checked;
+  });
+}
+
 function setupBookingForm() {
   const form = document.getElementById("bookingForm");
   const status = document.getElementById("formStatus");
@@ -165,14 +191,18 @@ function setupBookingForm() {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    const repeatChecked = form.repeatBooking && form.repeatBooking.checked;
+
     const data = {
       fullName: form.fullName.value.trim(),
       email: form.email.value.trim(),
       phone: form.phone.value.trim(),
       lessonType: form.lessonType.value,
+      duration: form.duration ? form.duration.value : "60",
       date: form.date.value,
       time: form.time.value,
       message: form.message.value.trim(),
+      repeatDays: repeatChecked ? form.repeatDays.value : "1",
     };
 
     if (!data.fullName || !data.email || !data.phone || !data.lessonType || !data.date || !data.time) {
@@ -204,12 +234,16 @@ function setupBookingForm() {
       const result = await response.json();
 
       if (result.status === "success") {
+        const days = parseInt(data.repeatDays, 10) || 1;
+        const summary = days > 1 ? `All ${days} lessons are confirmed` : "Your booking is confirmed";
         showStatus(
-          `Thanks ${data.fullName.split(" ")[0]}! Your booking is confirmed. You'll get an email confirmation at ${data.email} shortly.`,
+          `Thanks ${data.fullName.split(" ")[0]}! ${summary}. You'll get an email confirmation at ${data.email} shortly.`,
           "success"
         );
         form.reset();
         setMinBookingDate();
+        const repeatDaysRow = document.getElementById("repeatDaysRow");
+        if (repeatDaysRow) repeatDaysRow.hidden = true;
         refreshSlotPicker();
       } else if (result.status === "conflict") {
         showStatus(
