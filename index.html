@@ -345,15 +345,17 @@
           </select>
         </div>
 
-        <div class="form-row form-row-split">
-          <div>
-            <label for="date">Preferred Date *</label>
-            <input type="date" id="date" name="date" required>
+        <div class="form-row">
+          <label for="date">Preferred Date *</label>
+          <input type="date" id="date" name="date" required>
+        </div>
+
+        <div class="form-row">
+          <label id="slotPickerLabel">Available Times *</label>
+          <div id="slotPicker" class="slot-picker" aria-live="polite" aria-labelledby="slotPickerLabel">
+            <p class="slot-picker-hint">Choose a date above to see available times.</p>
           </div>
-          <div>
-            <label for="time">Preferred Time *</label>
-            <input type="time" id="time" name="time" required>
-          </div>
+          <input type="hidden" id="time" name="time">
         </div>
 
         <div class="form-row">
@@ -362,7 +364,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary btn-block" id="bookingSubmit">Request Booking</button>
-        <p class="form-fineprint">Submitting this form sends your request to our calendar for confirmation. We'll email you to confirm the exact time.</p>
+        <p class="form-fineprint">Only open times are shown above. Once you submit, your slot is locked in straight away and you'll get an email confirmation.</p>
       </form>
     </div>
   </section>
