@@ -59,13 +59,13 @@ const SLOT_INTERVAL_MINUTES = 15;
 // [openHour, closeHour] in 24-hour time. Keep in sync with the hours shown
 // on the website and in the structured data in index.html.
 const BUSINESS_HOURS = {
-  0: [7, 18], // Sunday
-  1: [6, 18], // Monday
-  2: [6, 18], // Tuesday
-  3: [6, 18], // Wednesday
-  4: [6, 18], // Thursday
-  5: [6, 18], // Friday
-  6: [6, 18], // Saturday
+  0: [8, 18], // Sunday
+  1: [8, 18], // Monday
+  2: [8, 18], // Tuesday
+  3: [8, 18], // Wednesday
+  4: [8, 18], // Thursday
+  5: [8, 18], // Friday
+  6: [8, 18], // Saturday
 };
 
 // How far ahead (in days) the periodic scanner looks for newly-added
@@ -88,6 +88,15 @@ const ALLOWED_DURATIONS_MINUTES = [60, 120];
 // Safety cap on how many consecutive days a single "repeat this booking"
 // request can create in one go.
 const MAX_REPEAT_DAYS = 10;
+
+// Google Sheet used as a simple customer log — name, contact details,
+// lesson type, and test date if given — for every booking (website and
+// phone/manual). Paste the Sheet ID from its URL
+// (https://docs.google.com/spreadsheets/d/THIS_PART/edit) once you've
+// created a blank sheet for it. Leave as the placeholder to skip logging
+// without affecting bookings — see SETUP-GUIDE.md.
+const CUSTOMER_LOG_SHEET_ID = "PASTE_YOUR_GOOGLE_SHEET_ID_HERE";
+const CUSTOMER_LOG_SHEET_TAB_NAME = "Bookings";
 
 // -------------------------------------------------------------------------
 
@@ -169,6 +178,7 @@ function doPost(e) {
       `Student: ${data.fullName}`,
       `Email: ${data.email}`,
       `Phone: ${data.phone}`,
+      data.testDate ? `Test date: ${data.testDate}` : null,
       data.message ? `Notes: ${data.message}` : null,
       repeatDays > 1 ? `Part of a ${repeatDays}-day booking run.` : null,
       "",
@@ -186,6 +196,20 @@ function doPost(e) {
       // Mark as already handled so the periodic scanner (which catches
       // manually-added bookings) doesn't also send this one a confirmation.
       event.setTag(CONFIRMATION_SENT_TAG, "true");
+
+      logBookingToSheet({
+        fullName: data.fullName,
+        email: data.email,
+        phone: data.phone,
+        lessonType: data.lessonType,
+        testDate: data.testDate || "",
+        lessonDate: formatDate(startTime),
+        lessonTime: formatTime(startTime),
+        duration: duration,
+        notes: data.message || "",
+        source: "Website",
+      });
+
       return event.getId();
     });
 
@@ -318,6 +342,55 @@ function getAvailability(dateStr, durationMinutes) {
   return { status: "success", date: dateStr, duration: duration, slots: slots };
 }
 
+/**
+ * Appends one row to the customer log spreadsheet, if configured. Never
+ * throws — a logging problem should never stop a booking or confirmation
+ * email from going through. Creates the tab and header row on first use.
+ */
+function logBookingToSheet(row) {
+  if (!CUSTOMER_LOG_SHEET_ID || CUSTOMER_LOG_SHEET_ID === "PASTE_YOUR_GOOGLE_SHEET_ID_HERE") return;
+
+  try {
+    const spreadsheet = SpreadsheetApp.openById(CUSTOMER_LOG_SHEET_ID);
+    let sheet = spreadsheet.getSheetByName(CUSTOMER_LOG_SHEET_TAB_NAME);
+    if (!sheet) {
+      sheet = spreadsheet.insertSheet(CUSTOMER_LOG_SHEET_TAB_NAME);
+    }
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow([
+        "Logged At",
+        "Full Name",
+        "Email",
+        "Phone",
+        "Lesson Type",
+        "Test Date",
+        "Lesson Date",
+        "Lesson Time",
+        "Duration (min)",
+        "Notes",
+        "Source",
+      ]);
+    }
+    sheet.appendRow([
+      new Date(),
+      row.fullName || "",
+      row.email || "",
+      row.phone || "",
+      row.lessonType || "",
+      row.testDate || "",
+      row.lessonDate || "",
+      row.lessonTime || "",
+      row.duration || "",
+      row.notes || "",
+      row.source || "",
+    ]);
+  } catch (err) {
+    // Swallow logging errors — the booking/confirmation already succeeded;
+    // a spreadsheet hiccup (e.g. sheet deleted, ID not yet set) shouldn't
+    // surface to the customer or block anything else.
+  }
+}
+
 function sendCustomerConfirmation(data, bookings, duration) {
   const multi = bookings.length > 1;
   const subject = multi
@@ -334,7 +407,7 @@ Thanks for booking with ${BUSINESS_NAME}!
 
 Here's what we've got:
   Lesson type: ${data.lessonType}
-  Duration: ${duration} minutes${multi ? ` (${bookings.length} lessons)` : ""}
+  Duration: ${duration} minutes${multi ? ` (${bookings.length} lessons)` : ""}${data.testDate ? `\n  Test date: ${data.testDate}` : ""}
 ${scheduleLines}
 
 We'll be in touch if we need to adjust anything. If you need to reschedule
@@ -363,7 +436,7 @@ function sendOwnerNotification(data, bookings, duration, eventIds) {
   Email: ${data.email}
   Phone: ${data.phone}
   Lesson type: ${data.lessonType}
-  Duration: ${duration} minutes
+  Duration: ${duration} minutes${data.testDate ? `\n  Test date: ${data.testDate}` : ""}
 ${scheduleLines}
   Notes: ${data.message || "—"}
 
@@ -392,6 +465,18 @@ function sendConfirmationsForNewBookings() {
 
     getCustomerGuests(event).forEach((guest) => {
       sendManualBookingConfirmation(guest, event);
+      logBookingToSheet({
+        fullName: guest.getName() || "",
+        email: guest.getEmail() || "",
+        phone: "",
+        lessonType: event.getTitle() || "",
+        testDate: "",
+        lessonDate: formatDate(event.getStartTime()),
+        lessonTime: formatTime(event.getStartTime()),
+        duration: Math.round((event.getEndTime().getTime() - event.getStartTime().getTime()) / 60000),
+        notes: event.getDescription() || "",
+        source: "Phone/Manual",
+      });
     });
     // Tag every scanned event (even ones with no guest, e.g. Vijay
     // blocking out personal time) so it's never re-checked again.
