@@ -385,9 +385,10 @@ function logBookingToSheet(row) {
       row.source || "",
     ]);
   } catch (err) {
-    // Swallow logging errors — the booking/confirmation already succeeded;
-    // a spreadsheet hiccup (e.g. sheet deleted, ID not yet set) shouldn't
-    // surface to the customer or block anything else.
+    // Never let a spreadsheet hiccup surface to the customer or block a
+    // booking — but do log it, so the cause is visible in Apps Script's
+    // Executions view (left sidebar → clock icon) instead of failing silently.
+    console.error("logBookingToSheet failed: " + err.message);
   }
 }
 
