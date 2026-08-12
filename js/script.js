@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setMinBookingDate();
   setupSlotPicker();
   setupRepeatToggle();
+  setupTestDateToggle();
 });
 
 function setYear() {
@@ -153,7 +154,7 @@ function setupSlotPicker() {
     placeholder.selected = true;
     placeholder.textContent = anyAvailable
       ? "Select a time"
-      : `Fully booked — call ${BUSINESS_PHONE}`;
+      : `No availability on this date — please call ${BUSINESS_PHONE}`;
     timeSelect.appendChild(placeholder);
 
     slots.forEach((slot) => {
@@ -182,6 +183,22 @@ function setupRepeatToggle() {
   });
 }
 
+/**
+ * Shows the optional "when is your test?" field only for Test Day Support
+ * bookings, since it's irrelevant for every other lesson type.
+ */
+function setupTestDateToggle() {
+  const lessonType = document.getElementById("lessonType");
+  const row = document.getElementById("testDateRow");
+  if (!lessonType || !row) return;
+
+  const sync = () => {
+    row.hidden = lessonType.value !== "Test Day Support";
+  };
+  lessonType.addEventListener("change", sync);
+  sync();
+}
+
 function setupBookingForm() {
   const form = document.getElementById("bookingForm");
   const status = document.getElementById("formStatus");
@@ -199,6 +216,7 @@ function setupBookingForm() {
       phone: form.phone.value.trim(),
       lessonType: form.lessonType.value,
       duration: form.duration ? form.duration.value : "60",
+      testDate: form.testDate ? form.testDate.value : "",
       date: form.date.value,
       time: form.time.value,
       message: form.message.value.trim(),
@@ -244,6 +262,8 @@ function setupBookingForm() {
         setMinBookingDate();
         const repeatDaysRow = document.getElementById("repeatDaysRow");
         if (repeatDaysRow) repeatDaysRow.hidden = true;
+        const testDateRow = document.getElementById("testDateRow");
+        if (testDateRow) testDateRow.hidden = true;
         refreshSlotPicker();
       } else if (result.status === "conflict") {
         showStatus(
