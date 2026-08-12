@@ -62,6 +62,14 @@ For a manually-added event to get a confirmation email, just add the customer's 
 
 **2-hour lessons and multi-day bookings:** the booking form lets customers choose a duration (1 hour or 2 hours) and, optionally, repeat the same time across several consecutive days (up to `MAX_REPEAT_DAYS`, default 10 — e.g. an intensive run before a test). The availability shown always reflects the chosen duration, and for a multi-day request the script checks **every** day is free before creating any events — if one day in the run is unavailable, nothing gets booked and the customer is told which day to adjust. No extra setup needed for this; it's built into `Code.gs`.
 
+**Optional — customer log in Google Sheets:** every booking (from the website, and from lessons Vijay adds by phone) can be logged as a row — name, email, phone, lesson type, test date if given, lesson date/time, duration, notes, and source. To turn this on:
+1. Create a new blank Google Sheet while signed into `rv2learners@gmail.com`.
+2. Copy its ID from the URL: `https://docs.google.com/spreadsheets/d/`**`THIS_PART`**`/edit`.
+3. Paste it into `CUSTOMER_LOG_SHEET_ID` near the top of `Code.gs`, replacing the placeholder.
+4. Redeploy (see below).
+
+A "Bookings" tab and header row are created automatically the first time something is logged. If `CUSTOMER_LOG_SHEET_ID` is left as the placeholder, logging is simply skipped — bookings still work normally. Since every lesson type gets its own row, filtering the sheet by a customer's email shows their full booking history at a glance.
+
 ## 2. Hosting — already done
 
 The site is live at **rv2learners.au**, deployed on Vercel and wired to a GitHub repo (`rv2learners-site`) so that any commit pushed to `main` auto-deploys. To make future edits: update the files in that repo (via GitHub's web UI or `git push`), and Vercel rebuilds automatically within a minute or two. The domain, HTTPS, and DNS are all already configured — nothing to do here.
