@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupSlotPicker();
   setupRepeatToggle();
   setupTestDateToggle();
+  setupServiceCards();
 });
 
 function setYear() {
@@ -46,6 +47,28 @@ function setupMobileNav() {
   nav.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => header.classList.remove("nav-open"));
   });
+}
+
+/**
+ * Makes each service card in the Services section expandable — clicking
+ * (or pressing Enter/Space) reveals who the course is for, what's covered,
+ * and how long it typically takes.
+ */
+function setupServiceCards() {
+  document.querySelectorAll(".service-card").forEach((card) => {
+    card.addEventListener("click", () => toggleServiceCard(card));
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleServiceCard(card);
+      }
+    });
+  });
+
+  function toggleServiceCard(card) {
+    const isOpen = card.classList.toggle("open");
+    card.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  }
 }
 
 function setupTestimonialScroller() {
