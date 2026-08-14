@@ -341,6 +341,35 @@ h2.center { text-align: center; }
 .service-card h3 { font-size: 1.1rem; margin-bottom: 8px; }
 .service-card p { color: var(--gray); font-size: 0.92rem; }
 
+.service-card { cursor: pointer; }
+.service-card:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+.service-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--blue);
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-top: 12px;
+}
+.service-chevron { display: inline-block; transition: transform 0.2s ease; }
+.service-card.open .service-chevron { transform: rotate(180deg); }
+.service-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, margin-top 0.3s ease, padding-top 0.3s ease;
+  margin-top: 0;
+}
+.service-card.open .service-detail {
+  max-height: 420px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.service-detail p { font-size: 0.88rem; color: var(--gray); margin-bottom: 8px; }
+.service-detail p:last-child { margin-bottom: 0; }
+.service-detail strong { color: var(--ink); }
+
 /* Testimonials */
 .testimonials { background: var(--white); }
 .testimonial-track {
