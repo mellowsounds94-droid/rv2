@@ -20,6 +20,7 @@ const BUSINESS_PHONE = "0420 655 620";
 document.addEventListener("DOMContentLoaded", () => {
   setYear();
   setupMobileNav();
+  setupPageRouter();
   setupTestimonialScroller();
   setupBookingForm();
   setMinBookingDate();
@@ -47,6 +48,79 @@ function setupMobileNav() {
   nav.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => header.classList.remove("nav-open"));
   });
+}
+
+/**
+ * Turns the site into a single-section "slide" experience: only one
+ * page (cover / home / about / services / testimonials / booking /
+ * contact) is visible at a time, and clicking a nav link cross-fades
+ * from the current page to the next instead of scrolling there.
+ * Elements opt in via a shared data-page="..." attribute; some pages
+ * are made of more than one element (e.g. "about" bundles the About Us
+ * section together with Meet Your Instructor).
+ */
+function setupPageRouter() {
+  const PAGE_IDS = ["cover", "home", "about", "services", "testimonials", "booking", "contact"];
+  const TRANSITION_MS = 380;
+  let currentPage = null;
+
+  function showPage(id, { pushHistory = true, instant = false } = {}) {
+    if (!PAGE_IDS.includes(id)) id = "home";
+    if (id === currentPage) return;
+
+    const targets = document.querySelectorAll('[data-page="' + id + '"]');
+    if (!targets.length) return;
+
+    document.querySelectorAll("[data-page].page-active").forEach((el) => {
+      if (el.getAttribute("data-page") === id) return;
+      el.classList.remove("page-active");
+      if (instant) {
+        el.style.display = "none";
+      } else {
+        el.classList.add("page-leaving");
+        setTimeout(() => {
+          el.classList.remove("page-leaving");
+          el.style.display = "none";
+        }, TRANSITION_MS);
+      }
+    });
+
+    targets.forEach((el) => {
+      el.style.display = "block";
+      void el.offsetWidth; // force reflow so the fade-in animation restarts
+      el.classList.add("page-active");
+    });
+
+    document.querySelectorAll(".nav a, .footer-nav a").forEach((a) => {
+      const target = (a.getAttribute("href") || "").replace("#", "");
+      a.classList.toggle("active-link", target === id);
+    });
+
+    if (pushHistory) {
+      const url = id === "cover" ? location.pathname : "#" + id;
+      history.pushState({ page: id }, "", url);
+    }
+
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    currentPage = id;
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
+    const target = link.getAttribute("href").slice(1);
+    if (!PAGE_IDS.includes(target)) return;
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      showPage(target);
+    });
+  });
+
+  window.addEventListener("popstate", () => {
+    const id = location.hash ? location.hash.slice(1) : "cover";
+    showPage(id, { pushHistory: false });
+  });
+
+  const initial = location.hash ? location.hash.slice(1) : "cover";
+  showPage(initial, { pushHistory: false, instant: true });
 }
 
 /**
