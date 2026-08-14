@@ -52,7 +52,7 @@ function setupMobileNav() {
 
 /**
  * Turns the site into a single-section "slide" experience: only one
- * page (cover / home / about / services / testimonials / booking /
+ * page (home / about / services / testimonials / booking /
  * contact) is visible at a time, and clicking a nav link cross-fades
  * from the current page to the next instead of scrolling there.
  * Elements opt in via a shared data-page="..." attribute; some pages
@@ -60,7 +60,7 @@ function setupMobileNav() {
  * section together with Meet Your Instructor).
  */
 function setupPageRouter() {
-  const PAGE_IDS = ["cover", "home", "about", "services", "testimonials", "booking", "contact"];
+  const PAGE_IDS = ["home", "about", "services", "testimonials", "booking", "contact"];
   const TRANSITION_MS = 380;
   let currentPage = null;
 
@@ -97,7 +97,7 @@ function setupPageRouter() {
     });
 
     if (pushHistory) {
-      const url = id === "cover" ? location.pathname : "#" + id;
+      const url = id === "home" ? location.pathname : "#" + id;
       history.pushState({ page: id }, "", url);
     }
 
@@ -115,11 +115,11 @@ function setupPageRouter() {
   });
 
   window.addEventListener("popstate", () => {
-    const id = location.hash ? location.hash.slice(1) : "cover";
+    const id = location.hash ? location.hash.slice(1) : "home";
     showPage(id, { pushHistory: false });
   });
 
-  const initial = location.hash ? location.hash.slice(1) : "cover";
+  const initial = location.hash ? location.hash.slice(1) : "home";
   showPage(initial, { pushHistory: false, instant: true });
 }
 
