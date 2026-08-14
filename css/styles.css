@@ -555,7 +555,10 @@ h2.center { text-align: center; }
 @media (max-width: 720px) {
   .nav { display: none; }
   .nav-toggle { display: flex; }
-  .nav-cta { display: none; }
+  .nav-cta { padding: 10px 16px; font-size: 0.85rem; }
+  .header-inner { gap: 10px; padding: 12px 16px; }
+  .logo-text { font-size: 0.92rem; }
+  .logo-icon { height: 42px; width: 42px; }
   .services-grid { grid-template-columns: 1fr; }
   .form-row-split { grid-template-columns: 1fr; }
   .trust-strip-inner { justify-content: space-between; }
@@ -579,60 +582,6 @@ h2.center { text-align: center; }
 /* ==========================================================
    Single-section "slide" navigation (PPT-style)
    ========================================================== */
-.cover {
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 60%, #1a3f75 100%);
-  color: var(--white);
-}
-.cover-inner {
-  min-height: calc(100vh - 86px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 48px 24px;
-}
-.cover-logo {
-  width: 108px;
-  height: 108px;
-  border-radius: 50%;
-  background: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px;
-  box-shadow: 0 16px 40px rgba(0,0,0,0.28);
-  margin-bottom: 28px;
-}
-.cover-logo img { width: 100%; height: 100%; object-fit: contain; }
-.cover-eyebrow {
-  font-family: var(--font-head);
-  font-weight: 700;
-  font-size: 1.3rem;
-  letter-spacing: 0.02em;
-}
-.cover-eyebrow span { color: var(--orange); }
-.cover-tagline {
-  color: var(--orange);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  margin-top: 8px;
-  margin-bottom: 28px;
-}
-.cover h1 { color: var(--white); font-size: 2.4rem; max-width: 720px; margin-bottom: 16px; }
-.cover-sub { color: #cfd9ec; max-width: 480px; margin-bottom: 20px; }
-.cover-rating {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #e8edf7;
-  font-size: 0.95rem;
-  margin-bottom: 32px;
-}
-.cover-rating .stars { color: #ffc94b; }
-
 [data-page] { display: none; }
 [data-page].page-active {
   display: block;
@@ -651,7 +600,3 @@ h2.center { text-align: center; }
 }
 
 .nav a.active-link, .footer-nav a.active-link { color: var(--orange); }
-
-@media (max-width: 720px) {
-  .cover-inner { min-height: calc(100vh - 70px); }
-}
