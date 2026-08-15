@@ -600,3 +600,83 @@ h2.center { text-align: center; }
 }
 
 .nav a.active-link, .footer-nav a.active-link { color: var(--orange); }
+
+
+/* HERO SUBURBS */
+.hero-suburbs {
+  font-size: 0.85rem;
+  color: var(--gray);
+  margin-top: -8px;
+  margin-bottom: 20px;
+}
+
+/* PASS GALLERY */
+.pass-gallery {
+  margin-top: 56px;
+  text-align: center;
+}
+.pass-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 480px;
+  margin: 20px auto 0;
+}
+.pass-photo {
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  aspect-ratio: 4 / 5;
+  margin: 0;
+}
+.pass-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* LIVE REVIEWS WIDGET */
+.live-reviews {
+  margin-top: 56px;
+  text-align: center;
+}
+.live-reviews > div[class*="elfsight-app-"] {
+  max-width: 900px;
+  margin: 20px auto 0;
+}
+
+/* STICKY MOBILE CTA BAR */
+.sticky-cta {
+  display: none;
+}
+@media (max-width: 720px) {
+  .sticky-cta {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    box-shadow: 0 -4px 16px rgba(15,35,64,0.15);
+  }
+  .sticky-cta-btn {
+    flex: 1;
+    text-align: center;
+    padding: 14px 10px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+  }
+  .sticky-cta-call {
+    background: var(--navy);
+    color: #fff;
+  }
+  .sticky-cta-book {
+    background: var(--orange);
+    color: #fff;
+  }
+  body {
+    padding-bottom: 56px;
+  }
+}
