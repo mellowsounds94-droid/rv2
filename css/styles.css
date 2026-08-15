@@ -659,3 +659,47 @@ h2.center { text-align: center; }
     padding-bottom: 56px;
   }
 }
+
+
+/* ============ DESIGN POLISH PASS ============ */
+:root {
+  --shadow-sm: 0 4px 14px rgba(15,35,64,0.08);
+  --shadow-md: 0 12px 32px rgba(15,35,64,0.12);
+  --shadow-lg: 0 24px 60px rgba(15,35,64,0.18);
+  --shadow-card-hover: 0 16px 40px rgba(15,35,64,0.14);
+}
+.hero h1 { font-size: 3rem; letter-spacing: -0.02em; line-height: 1.08; }
+h2 { letter-spacing: -0.01em; }
+.eyebrow, .section-eyebrow { letter-spacing: 0.08em; }
+.section-sub { font-size: 1.02rem; line-height: 1.65; }
+.hero {
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(255,255,255,0.06) 0, transparent 45%),
+    radial-gradient(circle at 85% 75%, rgba(255,140,43,0.10) 0, transparent 50%),
+    linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 60%, #1a3f75 100%);
+}
+.hero-inner > * { animation: rv2FadeUp 0.7s ease both; }
+.hero-inner > *:nth-child(2) { animation-delay: 0.08s; }
+@keyframes rv2FadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+.hero-card { box-shadow: var(--shadow-lg); border: 1px solid rgba(255,255,255,0.6); }
+.trust-strip { background: transparent; padding: 0; margin-top: -34px; position: relative; z-index: 5; }
+.trust-strip-inner { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 28px 36px; margin: 0 auto; max-width: 1112px; }
+.instructor { padding-top: 118px; }
+.btn-primary { box-shadow: 0 10px 24px rgba(255,140,43,0.30); }
+.btn-primary:hover { box-shadow: 0 14px 30px rgba(255,140,43,0.4); transform: translateY(-2px); }
+.btn-outline:hover { box-shadow: var(--shadow-sm); }
+.service-card { box-shadow: var(--shadow-sm); }
+.service-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-6px); }
+.pass-photo { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+.pass-photo:hover { transform: translateY(-4px); box-shadow: var(--shadow-card-hover); }
+.hero-card-icon, .service-icon { background: linear-gradient(150deg, var(--blue-light), #dbe7fb); }
+.booking-form, .hero-card { box-shadow: var(--shadow-lg); }
+.about-media-block.photo, .instructor-media-block { box-shadow: var(--shadow-md); }
+section { padding: 96px 0; }
+.booking, .services { padding: 100px 0; }
+@media (max-width: 720px) {
+  .trust-strip { margin-top: -20px; }
+  .trust-strip-inner { padding: 20px; margin: 0 16px; }
+  .instructor { padding-top: 76px; }
+  .hero h1 { font-size: 2.1rem; }
+}
