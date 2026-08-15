@@ -703,3 +703,9 @@ section { padding: 96px 0; }
   .instructor { padding-top: 76px; }
   .hero h1 { font-size: 2.1rem; }
 }
+
+/* CURATOR.IO RECENT PASSES FEED */
+#curator-feed-rv2 {
+  max-width: 900px;
+  margin: 20px auto 0;
+}
