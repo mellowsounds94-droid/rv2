@@ -584,7 +584,7 @@ h2.center { text-align: center; }
 /* HERO SUBURBS */
 .hero-suburbs {
   font-size: 0.85rem;
-  color: var(--gray);
+  color: #cfd9ec;
   margin-top: -8px;
   margin-bottom: 20px;
 }
