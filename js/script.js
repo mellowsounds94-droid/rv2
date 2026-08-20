@@ -246,6 +246,7 @@ function setupBookingForm() {
       fullName: form.fullName.value.trim(),
       email: form.email.value.trim(),
       phone: form.phone.value.trim(),
+      address: form.address ? form.address.value.trim() : '',
       lessonType: form.lessonType.value,
       duration: form.duration ? form.duration.value : "60",
       testDate: form.testDate ? form.testDate.value : "",
