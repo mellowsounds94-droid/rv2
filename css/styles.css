@@ -172,15 +172,6 @@ h1, h2, h3 { font-family: var(--font-head); color: var(--navy); line-height: 1.2
   max-width: 520px;
   margin-bottom: 24px;
 }
-.hero-rating {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 30px;
-  color: #e8edf7;
-  font-size: 0.95rem;
-}
-.stars { color: #ffc94b; letter-spacing: 2px; }
 .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
 .hero-actions .btn-outline { border-color: rgba(255,255,255,0.5); color: var(--white); }
 .hero-actions .btn-outline:hover { background: var(--white); color: var(--navy); }
@@ -597,14 +588,6 @@ h2.center { text-align: center; }
 }
 
 
-
-/* HERO SUBURBS */
-.hero-suburbs {
-  font-size: 0.85rem;
-  color: #cfd9ec;
-  margin-top: -8px;
-  margin-bottom: 20px;
-}
 
 /* PASS GALLERY */
 .pass-gallery {
