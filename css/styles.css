@@ -278,7 +278,7 @@ h2.center { text-align: center; }
   font-size: 0.95rem;
 }
 .about-list li::before {
-  content: "âœ“";
+  content: "✓";
   position: absolute;
   left: 0;
   color: var(--orange);
@@ -435,7 +435,7 @@ h2.center { text-align: center; }
   position: relative;
 }
 .booking-points li::before {
-  content: "âœ“";
+  content: "✓";
   position: absolute;
   left: 0;
   color: var(--orange);
